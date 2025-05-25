@@ -22,30 +22,17 @@
 # print(solution.isPalindrome(10))
 
 
-# class Solution:
-#     def isPalindrome(self, x: int) -> bool:
-#         if x < 0 or (x % 10 == 0 and x != 0):
-#             return False
-
-#         reversed_half = 0
-#         while x > reversed_half:
-#             reversed_half = x % 10 + reversed_half * 10
-#             x = x // 10
-
-#         return x == reversed_half or x == reversed_half // 10
-
 class Solution:
     def isPalindrome(self, x: int) -> bool:
-        if x != 0 and (x < 0 or x % 10 == 0):
+        if x < 0 or (x % 10 == 0 and x != 0):
             return False
-        parallel_part = 0
-        while parallel_part != x and parallel_part < x:
-            parallel_part = parallel_part * 10 + x % 10
-            if parallel_part == x:
-                return True
+
+        reversed_half = 0
+        while x > reversed_half:
+            reversed_half = x % 10 + reversed_half * 10
             x = x // 10
-        print(parallel_part, x)
-        return parallel_part == x
+
+        return x == reversed_half or x == reversed_half // 10
 
 
 solution = Solution()
