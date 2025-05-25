@@ -36,15 +36,17 @@
 
 class Solution:
     def isPalindrome(self, x: int) -> bool:
-        if x < 0 or (x % 10 == 0 and x != 0):
+        if x != 0 and (x < 0 or x % 10 == 0):
             return False
-        reversed_x = 0
-        while reversed_x < x:
-            reversed_x = reversed_x * 10 + x % 10
-            if reversed_x != x:
-                x = x // 10
-        return reversed_x == x
+        parallel_part = 0
+        while parallel_part != x and parallel_part < x:
+            parallel_part = parallel_part * 10 + x % 10
+            if parallel_part == x:
+                return True
+            x = x // 10
+        print(parallel_part, x)
+        return parallel_part == x
 
 
 solution = Solution()
-print(solution.isPalindrome(1))
+print(solution.isPalindrome(0))
