@@ -9,8 +9,6 @@ class Solution:
         for i in range(1, numRows + 1):
             char_index[i] = ""
 
-        print(char_index)
-
         current_index = 1
         is_increase = True
 
