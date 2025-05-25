@@ -1,14 +1,25 @@
 class Solution:
+    # def reverse(self, x: int) -> int:
+
+    #     str_x = str(abs(x))
+    #     result = int(str_x[::-1]) if x > 0 else int(str_x[::-1]) * -1
+
+    #     if result < -2**31 or result > 2**31 - 1:
+    #         return 0
+    #     return result
 
     def reverse(self, x: int) -> int:
-        is_negative = x < 0
-        x = abs(x)
-        result = 0
-        while x > 0:
-            result = result * 10 + x % 10
-            x = x // 10
-        return result * - 1 if is_negative else result
+        sign = -1 if x < 0 else 1
+        abs_x = abs(x)
+        reversed = 0
+        while abs_x > 0:
+            reversed = reversed * 10 + abs_x % 10
+            abs_x = abs_x // 10
+
+        if reversed < -2**31 or reversed > 2**31 - 1:
+            return 0
+        return reversed * sign
 
 
 solution = Solution()
-print(solution.reverse(1232))
+print(solution.reverse(-1232))
