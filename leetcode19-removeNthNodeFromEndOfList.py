@@ -28,27 +28,26 @@ class ListNode:
 class Solution:
 
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        total_node = 0
-        cloned_head = head
-        while cloned_head:
-            total_node += 1
-            cloned_head = cloned_head.next
-        if total_node < n:
-            return None
-        if total_node == n:
-            head = head.next
-            return head
-        current = head
-        for i in range(total_node - n - 1):
-            current = current.next
-        print(current.val)
-        removed_node = current.next
-        current.next = removed_node.next
-        removed_node.next = None
-        return head
+        dummy = ListNode(0, head)
+        slow = dummy
+        fast = dummy
+
+        # Move fast pointer n+1 steps ahead
+        for _ in range(n + 1):
+            fast = fast.next
+
+        # Move both pointers until fast reaches the end
+        while fast:
+            fast = fast.next
+            slow = slow.next
+
+        # Delete the nth node
+        slow.next = slow.next.next
+
+        return dummy.next
 
 
-l1 = transfer_list_to_linked_list([1, 2])
+l1 = transfer_list_to_linked_list([1, 2, 3, 4, 5])
 
 solution = Solution()
 print(solution.removeNthFromEnd(l1, 2).val)
