@@ -2,44 +2,46 @@ from typing import List
 
 
 class Solution:
-    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
-        combinations = []
+    def kSum(self, nums: List[int], target: int, k: int) -> List[List[int]]:
         nums.sort()
-        two_sums_combinations = []
-        n = len(nums)
-        for i in range(n):
-            for j in range(n - i - 1):
-                new_2_sum_combinations = [nums[i], nums[i + j + 1]]
-                if new_2_sum_combinations not in two_sums_combinations:
-                    two_sums_combinations.append(new_2_sum_combinations)
-        for two_sums in two_sums_combinations:
-            total = two_sums[0] + two_sums[1]
-            cloned_nums = nums.copy()
-            cloned_nums.remove(two_sums[0])
-            cloned_nums.remove(two_sums[1])
-            left = 0
-            right = len(cloned_nums) - 1
-            while left < right:
-                four_sum = total + cloned_nums[left] + cloned_nums[right]
-                if four_sum == target:
-                    new_combination = [two_sums[0], two_sums[1],
-                                       cloned_nums[left], cloned_nums[right]]
-                    new_combination.sort()
-                    if new_combination not in combinations:
-                        combinations.append(new_combination)
-                    while left < right and cloned_nums[left] == cloned_nums[left + 1]:
-                        left += 1
-                    while left < right and cloned_nums[right] == cloned_nums[right - 1]:
-                        right -= 1
-                    left += 1
-                    right -= 1
-                elif four_sum < target:
-                    left += 1
-                else:
-                    right -= 1
 
-        return combinations
+        def k_sum(start, remaining_k, sum):
+            res = []
+
+            # Early termination
+            if start == len(nums) or nums[start] * remaining_k > sum or nums[-1] * remaining_k < sum:
+                return res
+
+            if remaining_k == 2:
+                left, right = start, len(nums) - 1
+                while left < right:
+                    total = nums[left] + nums[right]
+                    if total == sum:
+                        res.append([nums[left], nums[right]])
+
+                        left += 1
+                        right -= 1
+                        while left < right and nums[left] == nums[left - 1]:
+                            left += 1
+                        while left < right and nums[right] == nums[right + 1]:
+                            right -= 1
+
+                    elif total < sum:
+                        left += 1
+                    else:
+                        right -= 1
+                return res
+
+            for i in range(start, len(nums)):
+                if i > start and nums[i] == nums[i - 1]:
+                    continue
+                for subset in k_sum(i + 1, remaining_k - 1, sum - nums[i]):
+                    res.append([nums[i]] + subset)
+
+            return res
+
+        return k_sum(0, k, target)
 
 
 solution = Solution()
-print(solution.fourSum([-4, -3, -2, -1, 0, 0, 1, 2, 3, 4], 0))
+print(solution.kSum([1, 0, -1, 0, -2, 2], 0, 4))
