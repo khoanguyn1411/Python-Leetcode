@@ -36,37 +36,26 @@ from typing import List
 
 class Solution:
     def nextPermutation(self, nums: List[int]) -> None:
-        if not nums:
-            return []
-
         n = len(nums)
+        i = n - 2
 
-        if n == 1:
-            return nums
+        while i >= 0 and nums[i] >= nums[i + 1]:
+            i -= 1
 
-        decrease_i = n - 1
+        if i >= 0:
 
-        while decrease_i >= 0 and nums[decrease_i] <= nums[decrease_i - 1]:
-            decrease_i -= 1
+            j = n - 1
+            while nums[j] <= nums[i]:
+                j -= 1
 
-        decrease_i -= 1
-        increase_i = decrease_i + 1
+            nums[i], nums[j] = nums[j], nums[i]
 
-        if decrease_i >= 0:
-            smallest_i = increase_i
-            while increase_i < n:
-                if nums[increase_i] < nums[smallest_i] and nums[increase_i] > nums[decrease_i]:
-                    smallest_i = increase_i
-                increase_i += 1
-            increase_i = smallest_i
+        left, right = i + 1, n - 1
+        while left < right:
+            nums[left], nums[right] = nums[right], nums[left]
+            left += 1
+            right -= 1
 
-        nums[decrease_i], nums[increase_i] = nums[increase_i], nums[decrease_i]
-
-        if decrease_i + 1 < len(nums):
-            for i in range(decrease_i + 1, len(nums), 1):
-                for j in range(i + 1, len(nums), 1):
-                    if nums[i] > nums[j]:
-                        nums[i], nums[j] = nums[j], nums[i]
         return nums
 
 

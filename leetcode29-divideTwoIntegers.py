@@ -43,21 +43,21 @@ class Solution:
         # Determine the sign of the result
         negative = (dividend < 0) != (divisor < 0)
 
-        # Work with absolute values
+        multiply = 1
+
         dividend = abs(dividend)
         divisor = abs(divisor)
 
         quotient = 0
 
-        while dividend <= divisor:
-            temp = divisor
-            multiple = 1
-            while divisor * 2 <= dividend:
-                divisor = divisor * 2
-                multiple = multiple * 2
-
-            quotient += multiple
-            dividend -= temp
+        while dividend >= divisor:
+            total_divisor = divisor
+            multiply = 1
+            while dividend > total_divisor * 2:
+                total_divisor = total_divisor * 2
+                multiply = multiply * 2
+            quotient += multiply
+            dividend -= total_divisor
 
         return -quotient if negative else quotient
 
