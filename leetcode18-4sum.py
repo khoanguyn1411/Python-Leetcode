@@ -3,44 +3,46 @@ from typing import List
 
 class Solution:
     def kSum(self, nums: List[int], target: int, k: int) -> List[List[int]]:
-        nums.sort()
+        results = []
 
-        def k_sum(start, remaining_k, sum):
-            res = []
-
-            # Early termination
-            if start == len(nums) or nums[start] * remaining_k > sum or nums[-1] * remaining_k < sum:
-                return res
-
-            if remaining_k == 2:
+        def backtrack(start, k, target, path):
+            # Base case: when k == 2, solve 2-sum with two pointers
+            if k == 2:
                 left, right = start, len(nums) - 1
                 while left < right:
-                    total = nums[left] + nums[right]
-                    if total == sum:
-                        res.append([nums[left], nums[right]])
-
+                    curr_sum = nums[left] + nums[right]
+                    if curr_sum == target:
+                        results.append(path + [nums[left], nums[right]])
                         left += 1
                         right -= 1
+                        # Skip duplicates
                         while left < right and nums[left] == nums[left - 1]:
                             left += 1
                         while left < right and nums[right] == nums[right + 1]:
                             right -= 1
-
-                    elif total < sum:
+                    elif curr_sum < target:
                         left += 1
                     else:
                         right -= 1
-                return res
+                return
 
-            for i in range(start, len(nums)):
+            # For k > 2, recursively reduce to smaller k
+            for i in range(start, len(nums) - k + 1):
+                # Skip duplicates
                 if i > start and nums[i] == nums[i - 1]:
                     continue
-                for subset in k_sum(i + 1, remaining_k - 1, sum - nums[i]):
-                    res.append([nums[i]] + subset)
 
-            return res
+                # Pruning: if the smallest possible sum > target or largest possible sum < target, stop
+                if nums[i] * k > target:
+                    break
+                if nums[-1] * k < target:
+                    break
 
-        return k_sum(0, k, target)
+                backtrack(i + 1, k - 1, target - nums[i], path + [nums[i]])
+
+        nums.sort()
+        backtrack(0, k, target, [])
+        return results
 
 
 solution = Solution()
