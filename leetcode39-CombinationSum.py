@@ -5,20 +5,18 @@ class Solution:
     def combinationSum(self, candidates, target):
         result = []
 
-        def backtrack(remaining, combo, start):
-            if remaining == 0:
+        def backtrack(combo: List, remain_sum, start):
+            if remain_sum == 0:
                 result.append(list(combo))
                 return
-            elif remaining < 0:
+            elif remain_sum < 0:
                 return
-
             for i in range(start, len(candidates)):
                 combo.append(candidates[i])
-                # not i+1 because we can reuse same number
-                backtrack(remaining - candidates[i], combo, i)
-                combo.pop()  # backtrack
+                backtrack(combo, remain_sum - candidates[i], i)
+                combo.pop()
 
-        backtrack(target, [], 0)
+        backtrack([], target, 0)
         return result
 
 
