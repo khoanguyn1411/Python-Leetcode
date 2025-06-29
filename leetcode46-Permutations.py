@@ -5,22 +5,24 @@ class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
         result = []
 
-        def backtrack(i_added, remaining_list: List[int], combo: List[int]):
+        def backtrack(combo, remaining):
             if len(combo) == len(nums):
-                result.append(combo)
+                result.append(combo[:])
                 return
-            combo.append(remaining_list[i_added])
-            remaining_list.pop(i_added)
-            original_remaining_list = remaining_list.copy()
-            original_combo = combo.copy()
-            for i in range(len(remaining_list)):
-                backtrack(i, remaining_list, combo)
-                remaining_list = original_remaining_list
-                combo = original_combo
 
-        for i in range(1):
-            backtrack(i, nums.copy(), [])
+            for i in range(len(remaining)):
+                # Choose
+                combo.append(remaining[i])
+                val = remaining.pop(i)
 
+                # Explore
+                backtrack(combo, remaining)
+
+                # Undo
+                combo.pop()
+                remaining.insert(i, val)
+
+        backtrack([], nums[:])
         return result
 
 
