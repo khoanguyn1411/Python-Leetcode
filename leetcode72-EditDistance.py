@@ -1,50 +1,27 @@
-from typing import List
+from functools import lru_cache
 
 
 class Solution:
     def minDistance(self, word1: str, word2: str) -> int:
-        len2 = len(word2)
+        @lru_cache(None)
+        def dp(i, j):
+            # If word1 is empty, insert all chars of word2
+            if i == len(word1):
+                return len(word2) - j
+            # If word2 is empty, delete all chars of word1
+            if j == len(word2):
+                return len(word1) - i
 
-        word1 = [char for char in word1]
-        word2 = [char for char in word2]
+            if word1[i] == word2[j]:
+                return dp(i + 1, j + 1)  # no cost
+            else:
+                return 1 + min(
+                    dp(i + 1, j),     # delete
+                    dp(i, j + 1),     # insert
+                    dp(i + 1, j + 1)  # replace
+                )
 
-        smallest = float("inf")
-
-        if not word1 or not word2:
-            return 0
-
-        def backtrack(word: List[str], current_step):
-            nonlocal smallest
-            if word == word2:
-                return
-
-            if len(word) > len2:
-                for i in range(len(word)):
-                    removed_char = word.pop(i)
-                    backtrack(word, current_step + 1)
-                    word.insert(i, removed_char)
-                return
-
-            if len(word) < len2:
-                for i in range(len2):
-                    for k in range(len(word) + 1):
-                        word.insert(k, word2[i])
-                        backtrack(word, current_step + 1)
-                        word.pop(k)
-                return
-
-            steps = 0
-            for i in range(len(word)):
-                if word[i] == word2[i]:
-                    continue
-                word[i] = word2[i]
-                steps += 1
-            current_step += steps
-            smallest = min(current_step, smallest)
-            return
-
-        backtrack(word1, 0)
-        return smallest
+        return dp(0, 0)
 
 
-print(Solution().minDistance("ros", "horse"))
+print(Solution().minDistance("horse", "ros"))  # Output: 3
